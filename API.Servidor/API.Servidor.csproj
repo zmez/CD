@@ -68,18 +68,6 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="bin\Debug\API.Servidor.exe" />
-    <Content Include="bin\Debug\BD\Autores.txt" />
-    <Content Include="bin\Debug\BD\LibroAutor.txt" />
-    <Content Include="bin\Debug\BD\Libros.txt" />
-    <Content Include="bin\Debug\BD\TablaAutoresTest.txt" />
-    <Content Include="bin\Debug\BD\TablaLibroAutorTest.txt" />
-    <Content Include="bin\Debug\BD\TablaLibrosTest.txt" />
-    <Content Include="bin\Debug\BD\TablaTest.txt" />
-    <Content Include="bin\Debug\BD\Usuarios.txt" />
-    <Content Include="bin\Debug\Utilidades.dll" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
