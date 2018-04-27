@@ -287,9 +287,9 @@ namespace Abuson.Clases {
                 var direccionActual = Direcciones[i];
 
                 if (i == 0) {
-                    orden = direccionActual.Puerto.ToString();
+                    orden = direccionActual.ToString();
                 } else {
-                    orden += " -> " + direccionActual.Puerto;
+                    orden += " -> " + direccionActual.ToString();
                 }
 
                 if (direccionActual != DireccionLocal) {
