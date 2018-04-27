@@ -17,6 +17,7 @@ namespace Abuson.Clases {
         private Acciones SiguienteAccion { get; set; }
 
         private DateTime HoraInicio { get; set; }
+        public int ID { get; set; }
 
         public Nodo() {
             DireccionLocal = new Direccion();
@@ -24,6 +25,7 @@ namespace Abuson.Clases {
             Direcciones = new List<Direccion>();
             DireccionCoordinador = new Direccion();
             HoraInicio = DateTime.Now;
+            ID = 0;
         }
 
         public Nodo(
@@ -37,6 +39,7 @@ namespace Abuson.Clases {
             Direcciones = direcciones;
             DireccionCoordinador = direccionCoordinador;
             HoraInicio = DateTime.Now;
+            ID = 0;
         }
 
         public bool SoyCoordinador() {
@@ -283,7 +286,7 @@ namespace Abuson.Clases {
             var duracion = (DateTime.Now.Minute * 60 + DateTime.Now.Second) - (HoraInicio.Minute * 60 + HoraInicio.Second);
 
             var separador = "---------------";
-            var estado = string.Format("\nEstado:\n{0}\nTiempo desde inicio: {4} segundos\nSoy coordinador: {1}\nDireccion coordinador: {2}\n{3}", separador, SoyCoordinador(), DireccionCoordinador.ToString(), separador, duracion);
+            var estado = string.Format("\nEstado:\n{0}\nID: {5}\nTiempo desde inicio: {4} segundos\nSoy coordinador: {1}\nDireccion coordinador: {2}\n{3}", separador, SoyCoordinador(), DireccionCoordinador.ToString(), separador, duracion, ID);
             Console.WriteLine(estado);
         }
 
@@ -312,7 +315,7 @@ namespace Abuson.Clases {
             var duracion = (DateTime.Now.Minute * 60 + DateTime.Now.Second) - (HoraInicio.Minute * 60 + HoraInicio.Second);
 
             var separador = "---------------";
-            var estado = string.Format("\nEstado:\n{0}\nTiempo desde el inicio: {7} segundos\nSoy coordinador: {1}\nDireccion coordinador: {2}\nDireccion local: {3}\nDemás direcciones: {4}\nOrden: {5}\n{6}", separador, SoyCoordinador(), DireccionCoordinador.ToString(), DireccionLocal.ToString(), direcciones, orden, separador, duracion);
+            var estado = string.Format("\nEstado:\n{0}\nID: {8}\nTiempo desde el inicio: {7} segundos\nSoy coordinador: {1}\nDireccion coordinador: {2}\nDireccion local: {3}\nDemás direcciones: {4}\nOrden: {5}\n{6}", separador, SoyCoordinador(), DireccionCoordinador.ToString(), DireccionLocal.ToString(), direcciones, orden, separador, duracion, ID);
 
             return estado;
         }

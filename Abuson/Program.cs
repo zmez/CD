@@ -53,6 +53,7 @@ namespace Abuson {
                 }
 
                 var nodo = new Nodo() {
+                    ID = i + 1,
                     DireccionLocal = dirActual,
                     DireccionSiguiente = dirSiguiente,
                     DireccionCoordinador = listaDirecciones[0],
@@ -75,8 +76,9 @@ namespace Abuson {
                 Console.WriteLine("\nLevantando nodo {0}...", i + 1);
 
                 var nodo = ListaNodos[i];
-                
+
                 args = Funciones.UnirArgumentosCMD(
+                    nodo.ID.ToString(),
                     nodo.DireccionLocal.ToString(),
                     nodo.DireccionSiguiente.ToString(),
                     nodo.DireccionCoordinador.ToString(),
@@ -91,7 +93,7 @@ namespace Abuson {
         }
 
         private static bool ManejarArgumentos(string[] args) {
-            if (args.Length == 4) {
+            if (args.Length == 5) {
                 Console.WriteLine("Argumentos recibidos.\nIniciando como nodo local...");
 
                 Console.WriteLine("\nMostrando argumentos");
@@ -100,24 +102,35 @@ namespace Abuson {
                 }
                 Console.WriteLine();
 
-                var direccionesString = args[3].Split('|');
+                var direccionesString = args[4].Split('|');
                 var listaDirecciones = new List<Direccion>();
 
                 foreach (var dirString in direccionesString) {
                     var dir = new Direccion(dirString);
                     listaDirecciones.Add(dir);
                 }
-                
+
                 NodoLocal = new Nodo {
-                    DireccionLocal = new Direccion(args[0]),
-                    DireccionSiguiente = new Direccion(args[1]),
-                    DireccionCoordinador = new Direccion(args[2]),
+                    ID = int.Parse(args[0]),
+                    DireccionLocal = new Direccion(args[1]),
+                    DireccionSiguiente = new Direccion(args[2]),
+                    DireccionCoordinador = new Direccion(args[3]),
                     Direcciones = listaDirecciones
                 };
 
                 Console.WriteLine("Nodo local creado:\n" + NodoLocal);
                 return true;
             }
+
+            Console.WriteLine("\nArgumentos incorrectos:");
+            for (var i = 0; i < args.Length; i++) {
+                Console.WriteLine("{0}> {1}", i, args[i]);
+            }
+
+            Console.WriteLine("\nPresione una tecla para finalizar...");
+            Console.ReadKey();
+            Environment.Exit(0);
+
             return false;
         }
     }
