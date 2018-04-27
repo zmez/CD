@@ -58,6 +58,7 @@
     <Content Include="bin\Debug\Abuson.exe" />
     <Content Include="bin\Debug\Abuson.pdb" />
     <Content Include="bin\Debug\Utilidades.dll" />
+    <Content Include="Comandos.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

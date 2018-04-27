@@ -13,14 +13,17 @@ namespace Abuson.Clases {
 
         public List<Direccion> Direcciones { get; set; }
         public Direccion DireccionCoordinador { get; set; }
-        public Direccion DireccionCoordinadorAnterior { get; set; }
+        private Direccion DireccionCoordinadorAnterior { get; set; }
         private Acciones SiguienteAccion { get; set; }
-        
+
+        private DateTime HoraInicio { get; set; }
+
         public Nodo() {
             DireccionLocal = new Direccion();
             DireccionSiguiente = new Direccion();
             Direcciones = new List<Direccion>();
             DireccionCoordinador = new Direccion();
+            HoraInicio = DateTime.Now;
         }
 
         public Nodo(
@@ -33,7 +36,8 @@ namespace Abuson.Clases {
             DireccionSiguiente = direccionSiguiente;
             Direcciones = direcciones;
             DireccionCoordinador = direccionCoordinador;
-    }
+            HoraInicio = DateTime.Now;
+        }
 
         public bool SoyCoordinador() {
             return DireccionCoordinador.ToString() == DireccionLocal.ToString();
@@ -129,6 +133,8 @@ namespace Abuson.Clases {
         }
         
         private void ContactarNodoSiguiente() {
+            MostrarEstadoCorto();
+
             MostrarHora();
             Console.WriteLine("Contactando siguiente nodo...");
             Esperar();
@@ -145,13 +151,14 @@ namespace Abuson.Clases {
                 */
 
                 if (DireccionSiguiente.ToString() == DireccionCoordinador.ToString()) {
+                    Console.WriteLine("El nodo coordinador ha caído.");
                     ElegirCoordinador();
                 } else {
                     var direccionCaida = DireccionSiguiente;
                     ActualizarSiguienteNodo();
 
                     if (direccionCaida.ToString() == DireccionSiguiente.ToString()) {
-                        Console.WriteLine("Ups, no quedan más nodos disponibles.");
+                        Console.WriteLine("Ups, no quedan más nodos disponibles.\nMe proclamo el coordinador definitivo.");
                         DireccionCoordinadorAnterior = DireccionCoordinador;
                         DireccionCoordinador = DireccionLocal;
                         MostrarEstadoCorto();
@@ -231,15 +238,14 @@ namespace Abuson.Clases {
             MostrarHora();
             Console.WriteLine("Actualizando siguiente nodo...");
             Console.WriteLine("Direcciones disponibles: {0}", Funciones.ListToSeparatedString(Direcciones, ','));
+            Console.WriteLine("Direccion siguiente actual: {0}", DireccionSiguiente.ToString());
             for (var i = 0; i < Direcciones.Count; i++) {
-                if (Direcciones[i].ToString() == DireccionSiguiente.ToString()) {
-                    if (Direcciones[i].ToString() == Direcciones.Last().ToString()) {
-                        DireccionSiguiente = Direcciones.First();
-                        goto Fin;
-                    } else {
-                        DireccionSiguiente = Direcciones[i + 1];
-                        goto Fin;
-                    }
+                if (Direcciones[i].ToString() == Direcciones.Last().ToString()) {
+                    DireccionSiguiente = Direcciones.First();
+                    goto Fin;
+                } else {
+                    DireccionSiguiente = Direcciones[i + 1];
+                    goto Fin;
                 }
             }
 
@@ -274,8 +280,10 @@ namespace Abuson.Clases {
         }
 
         public void MostrarEstadoCorto() {
+            var duracion = (DateTime.Now.Minute * 60 + DateTime.Now.Second) - (HoraInicio.Minute * 60 + HoraInicio.Second);
+
             var separador = "---------------";
-            var estado = string.Format("\nEstado:\n{0}\nSoy coordinador: {1}\nDireccion coordinador: {2}\n{3}", separador, SoyCoordinador(), DireccionCoordinador.ToString(), separador);
+            var estado = string.Format("\nEstado:\n{0}\nTiempo desde inicio: {4} segundos\nSoy coordinador: {1}\nDireccion coordinador: {2}\n{3}", separador, SoyCoordinador(), DireccionCoordinador.ToString(), separador, duracion);
             Console.WriteLine(estado);
         }
 
@@ -301,8 +309,10 @@ namespace Abuson.Clases {
                 }
             }
 
+            var duracion = (DateTime.Now.Minute * 60 + DateTime.Now.Second) - (HoraInicio.Minute * 60 + HoraInicio.Second);
+
             var separador = "---------------";
-            var estado = string.Format("\nEstado:\n{0}\nSoy coordinador: {1}\nDireccion coordinador: {2}\nDireccion local: {3}\nDemás direcciones: {4}\nOrden: {5}\n{6}", separador, SoyCoordinador(), DireccionCoordinador.ToString(), DireccionLocal.ToString(), direcciones, orden, separador);
+            var estado = string.Format("\nEstado:\n{0}\nTiempo desde el inicio: {7} segundos\nSoy coordinador: {1}\nDireccion coordinador: {2}\nDireccion local: {3}\nDemás direcciones: {4}\nOrden: {5}\n{6}", separador, SoyCoordinador(), DireccionCoordinador.ToString(), DireccionLocal.ToString(), direcciones, orden, separador, duracion);
 
             return estado;
         }
