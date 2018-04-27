@@ -1,0 +1,30 @@
+﻿[Nodo coordinador]
+1. Muestra su estado.
+2. Contacta al siguiente nodo, enviando saludos.
+3. Escucha. <- Aquí es cuando uno desconecta el nodo.
+
+[Nodo normal]
+1. Escucha por mensajes.
+2. Llega un mensaje.
+	a) No pasa nada, el nodo anterior envía saludos.
+		a1. Muestra el saludo en pantalla.
+		a2. Saluda de vuelta.
+		a3. Envía saludos al siguiente nodo.
+			a> Hay respuesta.
+				I. Muestra la respuesta en pantalla.
+				II. Vuelve a escuchar.
+			b> No hay respuesta.
+				I. Muestra en pantalla que el nodo no respondió.
+				> Si el nodo era coordinador, convoca elecciones.
+				> Si no, envía saludos al siguiente nodo.
+				> Si no quedan nodos, se detiene el programa tras mostrar la situación en pantalla.
+
+	b) Un nodo cualquiera le dice que el coordinador cayó y que está convocando elecciones, así que debe enviar su estado. Entonces, el nodo actual envía un "OK";
+		b1. Muestra el mensaje en pantalla.
+		b2. Responde "OK".
+		b3. Vuelve a escuchar.
+
+	c) Un nodo cualquiera comunica que se proclama coordinador.
+		c1. Muestra en pantalla quién es el nuevo coordinador.
+		c2. Responde "OK".
+		c3. Vuelve a escuchar.
