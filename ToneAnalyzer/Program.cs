@@ -1,18 +1,24 @@
 ﻿using IBM.WatsonDeveloperCloud.ToneAnalyzer.v3;
 using IBM.WatsonDeveloperCloud.ToneAnalyzer.v3.Model;
+using Newtonsoft.Json;
 using System;
 using System.IO;
 
 namespace ToneAnalyser {
     public class Program {
         static string Texto = null;
+        static string Respuesta = null;
 
         public static void Main(string[] args) {
             if (args.Length == 1) {
                 Texto = args[0];
                 Iniciar();
             }
-            
+
+            Console.WriteLine("\nPresione una tecla para mostrar la respuesta en JSON...");
+            Console.ReadKey();
+            Console.WriteLine(Respuesta);
+
             Console.WriteLine("\nPresione una tecla para finalizar...");
             Console.ReadKey();
         }
@@ -63,7 +69,9 @@ namespace ToneAnalyser {
 
             Notificar("Enviando texto. Esperando respuesta de Watson...");
             var postToneResult = _toneAnalyzer.Tone(toneInput, "application/json", null);
-            
+            var postToneResultConverted = JsonConvert.SerializeObject(postToneResult, Formatting.Indented);
+            Respuesta = string.Format("Resultado del Tone: {0}", postToneResultConverted);
+
             Notificar("Respuesta recibida. Procediendo a mostrar el análisis...");
             MostrarAnalisis(postToneResult);
             #endregion
