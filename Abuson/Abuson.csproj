@@ -51,13 +51,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="bin\Debug\Abuson.exe.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Algoritmo.txt" />
-    <Content Include="bin\Debug\Abuson.exe" />
-    <Content Include="bin\Debug\Abuson.pdb" />
-    <Content Include="bin\Debug\Utilidades.dll" />
     <Content Include="Comandos.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
