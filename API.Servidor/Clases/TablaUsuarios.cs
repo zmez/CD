@@ -45,5 +45,25 @@ namespace API.Servidor.Clases {
 
             return false;
         }
+
+        public override string ToString() {
+            var resultado = "Tabla: " + Nombre;
+
+            resultado += "\nÍndice\tUsuario\tClave";
+            for (var i = 0; i < Registros.Count; i++) {
+                var registroActual = Registros[i].Split('|');
+                var usuario = registroActual[0];
+                var clave = registroActual[1];
+
+                resultado += string.Format("\n{0}\t{1}\t{2}",
+                    i,
+                    usuario,
+                    clave);
+            }
+
+            resultado += "\n";
+
+            return resultado;
+        }
     }
 }

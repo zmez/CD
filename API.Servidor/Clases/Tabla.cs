@@ -78,8 +78,17 @@ namespace API.Servidor.Clases {
         }
 
         public override string ToString() {
-            var registros = Funciones.ListToSeparatedString(Registros, ',');
-            return string.Format("Tabla: {0}\nRegistros: {1}", Nombre, registros);
+            var resultado = "Tabla: " + Nombre;
+
+            resultado += "\nÍndice\tRegistro";
+            for (var i = 0; i < Registros.Count; i++) {
+                var registroActual = Registros[i];
+                resultado += string.Format("\n{0}\t{1}", i, registroActual);
+            }
+
+            resultado += "\n";
+
+            return resultado;
         }
     }
 }

@@ -60,5 +60,24 @@ namespace API.Servidor.Clases {
             return lista;
         }
 
+        public override string ToString() {
+            var resultado = "Tabla: " + Nombre;
+
+            resultado += "\nÍndice\tLibro\tAutor";
+            for (var i = 0; i < Registros.Count; i++) {
+                var registroActual = Registros[i].Split('|');
+                var libro = registroActual[0];
+                var autor = registroActual[1];
+
+                resultado += string.Format("\n{0}\t{1}\t{2}",
+                    i,
+                    libro,
+                    autor);
+            }
+
+            resultado += "\n";
+
+            return resultado;
+        }
     }
 }
