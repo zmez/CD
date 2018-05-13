@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text;
 using Utilidades;
@@ -18,26 +19,62 @@ namespace API.Cliente {
         static void Main(string[] args) {
             Notificar("Programa cliente iniciado.");
 
-            IP = Funciones.SeleccionarIPLocal();
+            IP = SeleccionarIPLocal();
             Puerto = Constantes.Puerto;
 
-            PruebaAgregarLibro();
-            PruebaAgregarAutor();
-
-            PruebaObtenerLibro();
-            PruebaObtenerAutor();
-
-            PruebaActualizarLibro();
-            PruebaActualizarAutor();
-
-            PruebaEliminarLibro();
-            PruebaEliminarAutor();
-
-            PruebaObtenerLibrosDeAutor();
-            PruebaObtenerAutoresDeLibro();
+            SeleccionarModalidad();
 
             Console.WriteLine("\nPresione una tecla para finalizar...");
             Console.ReadKey();
+        }
+
+        public static string SeleccionarIPLocal() {
+            var IPs = new List<string>();
+            var IPLocalWiFi = Funciones.ObtenerIPDesdeInterfaz(NetworkInterfaceType.Wireless80211);
+            var IPLocalEthernet = Funciones.ObtenerIPEthernet();
+
+            if (IPLocalWiFi == null) {
+                IPLocalWiFi = Constantes.MensajeNoDisponible;
+            }
+
+            if (IPLocalEthernet == null) {
+                IPLocalEthernet = Constantes.MensajeNoDisponible;
+            }
+
+            IPs.Add(IPLocalEthernet);
+            IPs.Add(IPLocalWiFi);
+            IPs.Add(Funciones.ObtenerIPDesdeInterfaz(NetworkInterfaceType.Loopback));
+
+            Inicio:
+            Console.WriteLine("\n\nSeleccione la IP:");
+            Console.WriteLine("1. {0} [Ethernet]", IPLocalEthernet);
+            Console.WriteLine("2. {0} [Wifi]", IPLocalWiFi);
+            Console.WriteLine("3. {0} [Loopback]", Funciones.ObtenerIPDesdeInterfaz(NetworkInterfaceType.Loopback));
+
+            Console.WriteLine("{0}. Otra IP", IPs.Count + 1);
+            Console.WriteLine("{0}. Nombre de dominio", IPs.Count + 2);
+            Console.WriteLine("{0}. Volver\n", IPs.Count + 3);
+            try {
+                var seleccion = int.Parse(Console.ReadKey().KeyChar.ToString());
+
+                if (seleccion == IPs.Count + 1) {
+                    Console.WriteLine("\nIngrese la IP: ");
+                    var nuevaIP = Console.ReadLine();
+                    return nuevaIP;
+                } else if (seleccion == IPs.Count + 2) {
+                    Console.WriteLine("\nIngrese el nombre de dominio (puerto por defecto: {0}): ", Constantes.Puerto);
+                    var nuevaIP = Console.ReadLine();
+                    return nuevaIP;
+                } else if (seleccion == IPs.Count + 3) {
+                    return null;
+                }
+
+
+                return IPs[seleccion - 1];
+            } catch (Exception e) {
+                Console.WriteLine("\nOpción no válida.\n" + e.Message);
+                goto Inicio;
+            }
         }
 
         private static void Notificar(string mensaje) {
@@ -50,7 +87,7 @@ namespace API.Cliente {
         }
 
         private static string EnviarMensaje(string mensajeEnviando, string ip, int puerto) {
-            Notificar("Iniciando cliente hacia: {0}:{1}", ip, puerto.ToString());
+            Notificar("Iniciando cliente hacia {0} en el puerto {1}", ip, puerto.ToString());
 
             // Datos a enviar.
             var texto = mensajeEnviando;
@@ -77,6 +114,94 @@ namespace API.Cliente {
             return mensajeRecibido;
         }
 
+        private static void SeleccionarModalidad() {
+            Notificar("Seleccionando modalidad...");
+
+            var modos = new string[] { "Automático", "Manual", "Salir" };
+
+            Inicio:
+            Console.WriteLine("\nSeleccione la modalidad:");
+            for (var i = 0; i < modos.Length; i++) {
+                Console.WriteLine("{0}. {1}", i + 1, modos[i]);
+            }
+
+            var seleccion = Console.ReadKey().Key;
+
+            if (seleccion == ConsoleKey.D1 || seleccion == ConsoleKey.NumPad1) {
+                OperarAutomaticamente();
+            } else if (seleccion == ConsoleKey.D2 || seleccion == ConsoleKey.NumPad2) {
+                OperarManualmente();
+            } else if (seleccion == ConsoleKey.D3 || seleccion == ConsoleKey.NumPad3) {
+                return;
+            } else {
+                Console.WriteLine("Opción inválida.");
+                goto Inicio;
+            }
+
+            goto Inicio;
+        }
+
+        private static void OperarManualmente() {
+            IngresarUsuario();
+            SeleccionarFuncion();
+        }
+
+        private static void OperarAutomaticamente() {
+            PruebaAgregarLibro();
+            PruebaAgregarAutor();
+
+            PruebaObtenerLibro();
+            PruebaObtenerAutor();
+
+            PruebaActualizarLibro();
+            PruebaActualizarAutor();
+
+            PruebaEliminarLibro();
+            PruebaEliminarAutor();
+
+            PruebaObtenerLibrosDeAutor();
+            PruebaObtenerAutoresDeLibro();
+        }
+
+        private static void IngresarUsuario() {
+            Notificar("Solicitando ingreso de usuario...");
+
+            Console.WriteLine("\nIngrese su usuario:");
+            var usuario = Console.ReadLine();
+
+            Console.WriteLine("\nIngrese su clave:");
+            var clave = Console.ReadLine();
+
+            Usuario = usuario;
+            Clave = clave;
+        }
+
+        private static void SeleccionarFuncion() {
+            Notificar("Seleccionando función...");
+
+            var funciones = new string[] { "AgregarLibro", "AgregarAutor", "ObtenerLibro", "ObtenerLibro", "EliminarAutor", "ActualizarLibro", "ActualizarAutor", "ObtenerLibrosDeAutor", "ObtenerAutoresDeLibro" };
+
+            Console.WriteLine("\nSeleccione la función a ejecutar:");
+            for (var i = 0; i < funciones.Length; i++) {
+                Console.WriteLine("{0}. {1}", i + 1, funciones[i]);
+            }
+
+            var funcionElegida = funciones[int.Parse(Console.ReadLine()) - 1];
+
+            Console.WriteLine("\nIngrese los argumentos:");
+            var args = Console.ReadLine();
+
+            Funcion = funcionElegida;
+            FuncionArgs = args;
+
+            MensajeEnviando = string.Format("{0}|{1},{2}|{3}", Usuario, Clave, Funcion, FuncionArgs);
+            Notificar("Mensaje a enviar:\n{0}", GenerarJson(MensajeEnviando));
+
+            var respuesta = EnviarMensaje(MensajeEnviando, IP, Puerto);
+            Notificar("Respuesta:\n\n{0}", respuesta);
+            EsperarTecla();
+        }
+        
         private static void PruebaAgregarLibro() {
             Notificar("Prueba: Agregar libro.");
             Funcion = "AgregarLibro";

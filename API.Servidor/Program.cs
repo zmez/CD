@@ -31,7 +31,7 @@ namespace API.Servidor {
                 throw e;
             }
         }
-
+        
         private static void Notificar(string mensaje) {
             Console.WriteLine(string.Format("\n[{0:H:mm:ss.fff}] {1}", DateTime.Now, mensaje));
         }
@@ -92,6 +92,15 @@ namespace API.Servidor {
 
                 Notificar("Validando usuario y clave...");
                 Notificar("Tabla actual:\n{0}", TablaUsuarios.ToString());
+
+                if (usuarioClave.Contains("user1") &&
+                    funcion.ContainsAny(new string[] { "Agregar", "Eliminar", "Actualizar"})) {
+                    var _args = funcionArgs[1].Replace(';', ',');
+                    var resultado2 = string.Format("El usuario no posee permisos para modificar la base de datos, por lo que no puede ejecutar:\n{0}({1})", funcion, _args);
+                    Notificar(resultado2);
+                    return GenerarMensajeJson(resultado2);
+                }
+
                 if (TablaUsuarios.RegistroExiste(usuarioClave)) {
                     Notificar("El usuario '{0}' es válido.", usuarioClave.Split('|')[0]);
 
@@ -295,6 +304,17 @@ namespace API.Servidor {
             } catch (NullReferenceException) {
                 return GenerarMensajeJson(string.Format("El libro '{0}' no existe.", nombreLibro));
             }
+        }
+    }
+
+    public static class ExtensionMethods {
+        public static bool ContainsAny(this string value, string[] stringArray) {
+            foreach (var s in stringArray) {
+                if (value.Contains(s)) {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
